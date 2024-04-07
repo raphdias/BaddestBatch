@@ -42,13 +42,14 @@ desiredFreq = 100;
 for i = 1:desiredNumber
   % FFT of EEG channels 1-4
   Spec(i,:) = abs(fft(y_voltage_uV(i,:), fs));
+
   % Plotting and labels
-  figure("Name", sprintf('Unfiltered FFT, channel no. %d', i))
-  plot(Spec(i,:))
+  figure("Name", sprintf('Unfiltered FFT, channel no. %d, 0-100Hz', i))
+  plot(0:desiredFreq, Spec(i,1:desiredFreq+1))
   xlabel("Frequency (Hz)"); ylabel("Amplitude");
-  title(sprintf('FFT of EEG Channel No. %d',i))
+  title(sprintf('Unfiltered FFT of EEG Channel No. %d, 0-100Hz',i))
 end
 
 %% Part a: bandpass filter 1-30Hz, cutting everything else out.
-% We bandpass in time by using filtfilt.
-
+% We zero-phase bandpass in time by using filtfilt.
+% Need to design bandpass by designfilt.
