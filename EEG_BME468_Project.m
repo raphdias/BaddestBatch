@@ -16,7 +16,7 @@ fs = 1000;
 % Letting the code find the amount of channels there are. 'Height' takes
 % row count.
 channelNumber = height(y_voltage_uV);
-
+desiredNumber = channelNumber - 2;
 % Opening a properly named figure for this.
 figure("Name", "Unmodified EEG Data, first 4 Channels")
 
@@ -34,21 +34,21 @@ for i = 1:channelNumber
   end
 end
 
-%% Part a: bandpass filter 1-30Hz, cutting everything else out.
-figure("Name", "Frequency Spectrums of each EEG channel")
-Spec = zeros(height(y_voltage_uV), fs);
+%% We plot the fft of the unmodified EEGs.
 
-for i = 1:channelNumber-2
+Spec = zeros(height(y_voltage_uV), fs);
+desiredFreq = 100;
+
+for i = 1:desiredNumber
   % FFT of EEG channels 1-4
   Spec(i,:) = abs(fft(y_voltage_uV(i,:), fs));
-  Spec(i,:) = fftshift(Spec(i,:));
-  frequency = -fs/2:fs/2-1;
-
   % Plotting and labels
   figure("Name", sprintf('Unfiltered FFT, channel no. %d', i))
-  plot(frequency, Spec(i,:))
+  plot(Spec(i,:))
   xlabel("Frequency (Hz)"); ylabel("Amplitude");
   title(sprintf('FFT of EEG Channel No. %d',i))
 end
 
+%% Part a: bandpass filter 1-30Hz, cutting everything else out.
+% We bandpass in time by using filtfilt.
 

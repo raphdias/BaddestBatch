@@ -35,19 +35,33 @@ for i = 1:channelNumber
 end
 
 %% Part a: bandpass filter 1-30Hz, cutting everything else out.
-figure("Name", "Frequency Spectrums of each EEG channel")
 Spec = zeros(height(y_voltage_uV), fs);
 
 for i = 1:channelNumber-2
-  Spec(i,:) = abs(fft(y_voltage_uV(i,:), fs));
+  % FFT of EEG channels 1-4
+  Spec(i,:) = (fft(y_voltage_uV(i,:), fs));
   Spec(i,:) = fftshift(Spec(i,:));
   frequency = -fs/2:fs/2-1;
 
   % Plotting and labels
-  subplot(2,2,i); plot(frequency, Spec(i,:))
+  figure("Name", sprintf('Unfiltered FFT, channel no. %d', i))
+  plot(frequency, Spec(i,:))
   xlabel("Frequency (Hz)"); ylabel("Amplitude");
   title(sprintf('FFT of EEG Channel No. %d',i))
-
 end
 
+%% We now bandpass by multiplying the signal with a rectangular function
+% Rectangular generation for -1 to -30 and 1 to 30 hz.
+figure;
+rect = zeros(1, fs);
+rect(:,fs/2+1:fs/2+31) = 1;
+rect(:,fs/2-31:fs/2-1) = 1;
+
+bandFilteredEEG = rect.*Spec(1,:);
+plot(frequency, bandFilteredEEG)
+
+figure;
+x = (ifft(Spec(1,:), length(y_voltage_uV)));
+x = ifftshift(x);
+plot(x_time_s,x)
 
