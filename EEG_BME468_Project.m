@@ -17,6 +17,7 @@ fs = 1000;
 % row count.
 channelNumber = height(y_voltage_uV);
 desiredNumber = channelNumber - 2;
+
 % Opening a properly named figure for this.
 figure("Name", "Unmodified EEG Data, first 4 Channels")
 
@@ -34,22 +35,45 @@ for i = 1:channelNumber
   end
 end
 
-%% We plot the fft of the unmodified EEGs.
+%% Part a: bandpass filter 1-30Hz, cutting everything else out.
+% We zero-phase bandpass in time by using filtfilt.
+% Need to design bandpass by designfilt.
 
+bpFilt = designfilt('bandpassfir', ...
+    'FilterOrder',20,'CutoffFrequency1',1, ...
+    'CutoffFrequency2', 30,'SampleRate',1000);
+
+% Initialization for the filtered signal + its transform
+filteredSpec = zeros(desiredNumber, fs);
+bandFiltered = zeros(desiredNumber, length(y_voltage_uV));
+
+% Initializing original transform size, and var for desired max freq.
 Spec = zeros(height(y_voltage_uV), fs);
 desiredFreq = 100;
 
 for i = 1:desiredNumber
-  % FFT of EEG channels 1-4
+  % Create figure with appropriate name
+  figure("Name", sprintf('Unfilt & Filt FFT, channel no. %d, 0-100Hz', i))
+
+  % Filtering & filtered FFT of EEG channels 1-4
+  bandFiltered(i,:) = filtfilt(bpFilt, y_voltage_uV(i,:));
+  filteredSpec(i,:) = abs(fft(bandFiltered(i,:), fs));
+
+  % Unfiltered FFT of EEG channels 1-4
   Spec(i,:) = abs(fft(y_voltage_uV(i,:), fs));
 
-  % Plotting and labels
-  figure("Name", sprintf('Unfiltered FFT, channel no. %d, 0-100Hz', i))
+  % Plotting and labels for unfiltered
+  subplot(2,1,1)
   plot(0:desiredFreq, Spec(i,1:desiredFreq+1))
-  xlabel("Frequency (Hz)"); ylabel("Amplitude");
+  xlabel("Frequency (Hz)"); 
+  ylabel("Amplitude");
   title(sprintf('Unfiltered FFT of EEG Channel No. %d, 0-100Hz',i))
+
+  % Plotting and labels for filtered
+  subplot(2,1,2)
+  plot(0:desiredFreq, filteredSpec(i,1:desiredFreq+1))
+  xlabel("Frequency (Hz)"); 
+  ylabel("Amplitude");
+  title(sprintf('1-30Hz BP Filtered FFT of EEG Channel No. %d, 0-100Hz',i))
 end
 
-%% Part a: bandpass filter 1-30Hz, cutting everything else out.
-% We zero-phase bandpass in time by using filtfilt.
-% Need to design bandpass by designfilt.
