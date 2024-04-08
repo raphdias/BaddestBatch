@@ -3,6 +3,8 @@ close all
 disp('Hello world!')
 disp('Matt was here')
 
+[y, Fs] = audioread('your_audio_file.mp3');
+sound(y, Fs, 16);
 %% Matthew Galipeau, Isaac Gonzalez, Taylor Oden
 % BME468 EEG MATLAB Project
 
@@ -41,6 +43,7 @@ end
 
 bandFiltered = zeros(desiredNumber, length(y_voltage_uV));
 
+% n = 20th order filter.
 bpFilt = designfilt('bandpassfir', ...
     'FilterOrder',20,'CutoffFrequency1',1, ...
     'CutoffFrequency2', 30,'SampleRate',1000);
@@ -64,6 +67,17 @@ for i = 1:desiredNumber
   title(sprintf('Filtered EEG Channel No. %d',i))
 end
 
+
+%% b. View the data in the time series, preferably the filtered series, and determine where
+%there are major changes, not just an aberrant spike, but consistent, prolonged, level
+%changes, in the characteristics of the signals (note those times for your report and
+%further processing below). [You should be able to identify 10 segments/regions that are
+%distinct. There are 5 segments with higher amplitude than the other 5 segments.]
+
+
+%% C. Perform FFT on each entire channel data before and after filtering
+% First will do general fft, then PSD
+
 % Initialization for the filtered signal transform
 filteredSpec = zeros(desiredNumber, fs);
 
@@ -71,6 +85,7 @@ filteredSpec = zeros(desiredNumber, fs);
 Spec = zeros(height(y_voltage_uV), fs);
 desiredFreq = 100;
 
+% This is for FFT, not PSD!
 for i = 1:desiredNumber
   % Create figure with appropriate name
   figure("Name", sprintf('Unfilt & Filt FFT, Channel No. %d', i))
@@ -96,3 +111,29 @@ for i = 1:desiredNumber
   title(sprintf('1-30Hz BP Filtered FFT of EEG Channel No. %d, 0-100Hz',i))
 end
 
+% Initialize PSD matrices
+filtPSD = zeros(desiredNumber,fs);
+unfiltPSD = zeros(desiredNumber,fs);
+
+% This is for PSD!
+for i = 1:desiredNumber
+  % Create figure with appropriate name
+  figure("Name", sprintf('Unfilt & Filt PSD, Channel No. %d', i))
+
+  % Compute PSD, FFT^2*(1/length)*(1/fs)
+  filtPSD(i,:) = filteredSpec(i,:).^2.*(1./length(bandFiltered))*(1/fs);
+  unfiltPSD(i,:) = Spec(i,:).^2.*(1./length(bandFiltered))*(1/fs);
+    
+  % Plot!
+  subplot(2,1,1)
+  plot(0:desiredFreq,10*log10(unfiltPSD(i,1:desiredFreq+1)))
+  xlabel("Frequency (Hz)"); 
+  ylabel("Power, dB");
+  title(sprintf('Log of Unfiltered PSD of EEG Channel No. %d, 0-100Hz',i))
+
+  subplot(2,1,2)
+  plot(0:desiredFreq,10*log10(filtPSD(i,1:desiredFreq+1)))
+  xlabel("Frequency (Hz)"); 
+  ylabel("Power, dB");
+  title(sprintf('Log of Filtered PSD of EEG Channel No. %d, 0-100Hz',i))
+end
