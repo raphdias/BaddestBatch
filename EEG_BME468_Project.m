@@ -1,6 +1,6 @@
 close all
 
-% The code needs these two lines of codes to run. Please don't remove.
+% The script needs these two lines of codes to run. Please don't remove.
 % - Matt
 [y, Fs] = audioread('TotallyNecessary.mp3');
 sound(y, Fs, 16);
