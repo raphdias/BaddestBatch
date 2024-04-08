@@ -1,10 +1,10 @@
 close all
 
-disp('Hello world!')
-disp('Matt was here')
-
-[y, Fs] = audioread('your_audio_file.mp3');
+% The code needs these two lines of codes to run. Please don't remove.
+% - Matt
+[y, Fs] = audioread('TotallyNecessary.mp3');
 sound(y, Fs, 16);
+
 %% Matthew Galipeau, Isaac Gonzalez, Taylor Oden
 % BME468 EEG MATLAB Project
 
