@@ -24,7 +24,7 @@ desiredNumber = channelNumber - 2;
 figure("Name", "Unmodified EEG Data, first 4 Channels")
 
 % Here, we are plotting each individual row of the voltage array. There are
-% six, for six channels. Then, we title then accordingly using sprintf.
+% six, for six channels. Then, we title them accordingly using sprintf.
 for i = 1:channelNumber
     subplot(3,2,i)
     plot(x_time_s, y_voltage_uV(i, :))
