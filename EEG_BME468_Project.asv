@@ -42,42 +42,40 @@ end
 bpFilt = designfilt('bandpassfir', ...
     'FilterOrder',20,'CutoffFrequency1',1, ...
     'CutoffFrequency2', 30,'SampleRate',1000);
+for i = 1:desiredNumber
+  bandFiltered(i,:) = filtfilt(bpFilt, y_voltage_uV(i,:));
+end
 
 % Initialization for the filtered signal + its transform
 filteredSpec = zeros(desiredNumber, fs);
-bandFiltered = zeros(height(y_voltage_uV), length(y_voltage_uV));
+bandFiltered = zeros(desiredNumber, length(y_voltage_uV));
 
 % Initializing original transform size, and var for desired max freq.
 Spec = zeros(height(y_voltage_uV), fs);
 desiredFreq = 100;
 
 for i = 1:desiredNumber
+  % Create figure with appropriate name
+  figure("Name", sprintf('Unfilt & Filt FFT, channel no. %d, 0-100Hz', i))
+
   % Filtering & filtered FFT of EEG channels 1-4
-  bandFiltered = filtfilt(bpFilt, y_voltage_uV(i,:));
   filteredSpec(i,:) = abs(fft(bandFiltered(i,:), fs));
 
   % Unfiltered FFT of EEG channels 1-4
   Spec(i,:) = abs(fft(y_voltage_uV(i,:), fs));
 
-  % Plotting and labels for filtered
-  subplot(2,1,1)
-  figure("Name", sprintf('Unfilt & Filt FFT, channel no. %d, 0-100Hz', i))
-  plot(0:desiredFreq, filteredSpec(i,1:desiredFreq+1))
-  xlabel("Frequency (Hz)"); 
-  ylabel("Amplitude");
-  title(sprintf('1-30Hz BP Filtered FFT of EEG Channel No. %d, 0-100Hz',i))
-
   % Plotting and labels for unfiltered
-  subplot(2,1,2)
-  figure("Name", sprintf('Unfilt & Filt FFT, channel no. %d, 0-100Hz', i))
+  subplot(2,1,1)
   plot(0:desiredFreq, Spec(i,1:desiredFreq+1))
   xlabel("Frequency (Hz)"); 
   ylabel("Amplitude");
   title(sprintf('Unfiltered FFT of EEG Channel No. %d, 0-100Hz',i))
-end
 
-subplot(2,1,1)
-plot(bandFiltered)
-subplot(2,1,2)
-plot(y_voltage_uV(1,:))
+  % Plotting and labels for filtered
+  subplot(2,1,2)
+  plot(0:desiredFreq, filteredSpec(i,1:desiredFreq+1))
+  xlabel("Frequency (Hz)"); 
+  ylabel("Amplitude");
+  title(sprintf('1-30Hz BP Filtered FFT of EEG Channel No. %d, 0-100Hz',i))
+end
 

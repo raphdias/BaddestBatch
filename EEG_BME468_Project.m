@@ -37,15 +37,35 @@ end
 
 %% Part a: bandpass filter 1-30Hz, cutting everything else out.
 % We zero-phase bandpass in time by using filtfilt.
-% Need to design bandpass by designfilt.
+% Need to design bandpass by designfilt. Initialize first.
+
+bandFiltered = zeros(desiredNumber, length(y_voltage_uV));
 
 bpFilt = designfilt('bandpassfir', ...
     'FilterOrder',20,'CutoffFrequency1',1, ...
     'CutoffFrequency2', 30,'SampleRate',1000);
 
-% Initialization for the filtered signal + its transform
+for i = 1:desiredNumber
+  % Zero-phase filtering and creating figure titles
+  bandFiltered(i,:) = filtfilt(bpFilt, y_voltage_uV(i,:));
+  figure("Name", sprintf('Unfilt vs. Filt (Time), Channel No. %d', i))
+
+  % just plotting filtered and unfiltered from here on out
+  subplot(2,1,1)
+  plot(x_time_s, y_voltage_uV(i,:))
+  xlabel("Time (sec)");
+  ylabel("Voltage, uV");
+  title(sprintf('Unfiltered EEG Channel No. %d',i))  
+  
+  subplot(2,1,2)
+  plot(x_time_s, bandFiltered(i,:))
+  xlabel("Time (sec)");
+  ylabel("Voltage, uV");
+  title(sprintf('Filtered EEG Channel No. %d',i))
+end
+
+% Initialization for the filtered signal transform
 filteredSpec = zeros(desiredNumber, fs);
-bandFiltered = zeros(desiredNumber, length(y_voltage_uV));
 
 % Initializing original transform size, and var for desired max freq.
 Spec = zeros(height(y_voltage_uV), fs);
@@ -53,10 +73,9 @@ desiredFreq = 100;
 
 for i = 1:desiredNumber
   % Create figure with appropriate name
-  figure("Name", sprintf('Unfilt & Filt FFT, channel no. %d, 0-100Hz', i))
+  figure("Name", sprintf('Unfilt & Filt FFT, Channel No. %d', i))
 
   % Filtering & filtered FFT of EEG channels 1-4
-  bandFiltered(i,:) = filtfilt(bpFilt, y_voltage_uV(i,:));
   filteredSpec(i,:) = abs(fft(bandFiltered(i,:), fs));
 
   % Unfiltered FFT of EEG channels 1-4
