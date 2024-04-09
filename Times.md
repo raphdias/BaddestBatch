@@ -1,3 +1,5 @@
+For Part b.) 
+
 Channel 1: 
 segment 1 begins - 225
 segment 1 ends   - 255
