@@ -11,8 +11,18 @@ segment 5 begins - 406
 segment 5 ends   - 416
 
 Channel 2:
+segment 1 begins - 223
+segment 1 ends   - 237
+segment 2 begins - 267
+segment 2 ends   - 285
+segment 3 begins - 314
+segment 3 ends   - 326
+segment 4 begins - 360
+segment 4 ends   - 373
+segment 5 begins - 406
+segment 5 ends   - 412
 
-Channel 3
+Channel 3:
 Segment 1 Begins - 222
 Segment 1 Ends - 237
 Segment 2 Begins - 272
@@ -24,7 +34,7 @@ Segment 4 Ends - 374
 Segment 5 Begins  - 404
 Segment 5 Ends - 416
 
-Chanel 4
+Channel 4:
 Segment 1 Begins - 222
 Segment 1 Ends - 240
 Segment 2 Begins - 267
