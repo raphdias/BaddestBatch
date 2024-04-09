@@ -37,6 +37,8 @@ for i = 1:channelNumber
     end
 end
 
+sound(y, Fs, 16);
+
 %% A. Bandpass filter 1-30Hz, cutting everything else out.
 % We zero-phase bandpass in time by using filtfilt.
 % Need to design bandpass by designfilt. Initialize first.
@@ -67,6 +69,7 @@ for i = 1:desiredNumber
     title(sprintf('Filtered EEG Channel No. %d',i))
 end
 
+sound(y, Fs, 16);
 
 %% B. View the data in the time series, preferably the filtered series,
 % and determine where there are major changes, not just an aberrant spike,
@@ -112,6 +115,8 @@ for i = 1:desiredNumber
     title(sprintf('1-30Hz BP Filtered FFT of EEG Channel No. %d, 0-100Hz',i))
 end
 
+sound(y, Fs, 16);
+
 % Initialize PSD matrices
 filtPSD = zeros(desiredNumber,fs);
 unfiltPSD = zeros(desiredNumber,fs);
@@ -138,6 +143,8 @@ for i = 1:desiredNumber
     ylabel("Power, dB");
     title(sprintf('Log of Filtered PSD of EEG Channel No. %d, 0-100Hz',i))
 end
+
+sound(y, Fs, 16);
 
 %% Questions to ask:
     % 1. Should we multiply our plot amplitudes by 2? Reasoning: with the
@@ -181,3 +188,5 @@ for i = 1:desiredNumber
     ylabel("Power, dB");
     title(sprintf('Log of BP&BS Filt PSD of EEG Channel No. %d, 0-100Hz',i))
 end
+
+sound(y, Fs, 16);
