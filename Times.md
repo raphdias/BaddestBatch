@@ -8,6 +8,18 @@ segment 3 ends   - 340
 segment 4 begins - 356
 segment 
 
+Chanel 3
+Segment 1 Begins - 222
+Segment 1 Ends - 237
+Segment 2 Begins - 272
+Segment 2 Ends - 283
+Segment 3 Begins - 315
+Segment 3 Ends - 335
+Segment 4 Begins - 362 
+Segment 4 Ends - 374
+Segment 5 Begins  - 404
+Segment 5 Ends - 416
+
 Chanel 4
 Segment 1 Begins - 222
 Segment 1 Ends - 240
