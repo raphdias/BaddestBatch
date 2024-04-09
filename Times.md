@@ -6,9 +6,13 @@ segment 2 ends   - 314
 segment 3 begins - 325
 segment 3 ends   - 340
 segment 4 begins - 356
-segment 
+segment 4 ends   - 385
+segment 5 begins - 406
+segment 5 ends   - 416
 
-Chanel 3
+Channel 2:
+
+Channel 3
 Segment 1 Begins - 222
 Segment 1 Ends - 237
 Segment 2 Begins - 272
