@@ -1,6 +1,6 @@
 close all
 
-% The code needs these two lines of codes to run. Please don't remove.
+% The script needs these two lines of codes to run. Please don't remove.
 % - Matt
 [y, Fs] = audioread('TotallyNecessary.mp3');
 sound(y, Fs, 16);
@@ -24,7 +24,7 @@ desiredNumber = channelNumber - 2;
 figure("Name", "Unmodified EEG Data, first 4 Channels")
 
 % Here, we are plotting each individual row of the voltage array. There are
-% six, for six channels. Then, we title then accordingly using sprintf.
+% six, for six channels. Then, we title them accordingly using sprintf.
 for i = 1:channelNumber
     subplot(3,2,i)
     plot(x_time_s, y_voltage_uV(i, :))
@@ -36,6 +36,8 @@ for i = 1:channelNumber
         title(sprintf('EEG Channel No. %d, negligible.', i))
     end
 end
+
+sound(y, Fs, 16);
 
 %% A. Bandpass filter 1-30Hz, cutting everything else out.
 % We zero-phase bandpass in time by using filtfilt.
@@ -67,6 +69,7 @@ for i = 1:desiredNumber
     title(sprintf('Filtered EEG Channel No. %d',i))
 end
 
+sound(y, Fs, 16);
 
 %% B. View the data in the time series, preferably the filtered series,
 % and determine where there are major changes, not just an aberrant spike,
@@ -112,6 +115,8 @@ for i = 1:desiredNumber
     title(sprintf('1-30Hz BP Filtered FFT of EEG Channel No. %d, 0-100Hz',i))
 end
 
+sound(y, Fs, 16);
+
 % Initialize PSD matrices
 filtPSD = zeros(desiredNumber,fs);
 unfiltPSD = zeros(desiredNumber,fs);
@@ -139,13 +144,16 @@ for i = 1:desiredNumber
     title(sprintf('Log of Filtered PSD of EEG Channel No. %d, 0-100Hz',i))
 end
 
+sound(y, Fs, 16);
+
 %% Questions to ask:
     % 1. Should we multiply our plot amplitudes by 2? Reasoning: with the
     % current plotting methods, we are ignoring negative freq.
     % 2. Is PSD just amplitude squared? We have taken the log of this. Of
     % course, made sure to modify amplitude due to nature of fft.
     % 3. What should we limit ourselves to for the bandpass filter?
-    % Choosing such a high order filter wil
+    % Choosing such a high order filter will negate the need for a notch
+    % filter. At what point does it become unreasonable?
 
 %% D. Notch filter, 60Hz, Zero-phase.
 % Going to design another filter using designfilt. Cut out from 59-61Hz.
@@ -179,4 +187,26 @@ for i = 1:desiredNumber
     xlabel("Frequency (Hz)"); 
     ylabel("Power, dB");
     title(sprintf('Log of BP&BS Filt PSD of EEG Channel No. %d, 0-100Hz',i))
+end
+
+sound(y, Fs, 16);
+
+figure("Name", "Filtered time data after bandpass")
+
+for i = 1:desiredNumber
+    % Zero-phase filtering and creating figure titles
+    bandFiltered(i,:) = filtfilt(bpFilt, y_voltage_uV(i,:));
+
+    % just plotting filtered and unfiltered from here on out
+    subplot(2,1,1)
+    plot(x_time_s, y_voltage_uV(i,:))
+    xlabel("Time (sec)");
+    ylabel("Voltage, uV");
+    title(sprintf('Unfiltered EEG Channel No. %d',i))  
+  
+    subplot(2,1,2)
+    plot(x_time_s, bandFiltered(i,:))
+    xlabel("Time (sec)");
+    ylabel("Voltage, uV");
+    title(sprintf('Filtered EEG Channel No. %d',i))
 end

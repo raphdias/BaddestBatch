@@ -78,6 +78,18 @@ sound(y, Fs, 16);
 % [You should be able to identify 10 segments/regions that are distinct. 
 % There are 5 segments with higher amplitude than the other 5 segments.]
 
+% This is just for help with part b
+figure("Name", "Filtered time data after bandpass")
+
+for i = 1:desiredNumber
+
+    % just plotting filtered and unfiltered from here on out
+    subplot(2,2,i)
+    plot(x_time_s, bandFiltered(i,:))
+    xlabel("Time (sec)");
+    ylabel("Voltage, uV");
+    title(sprintf('Filtered EEG Channel No. %d',i))
+end
 
 %% C. Perform FFT on each entire channel data before and after filtering
 % First will do general fft, then PSD
@@ -190,3 +202,5 @@ for i = 1:desiredNumber
 end
 
 sound(y, Fs, 16);
+
+
