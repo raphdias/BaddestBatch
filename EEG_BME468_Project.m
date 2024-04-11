@@ -11,6 +11,7 @@ sound(y, Fs, 16);
 % First, need to load in the .mat... sampling rate = 1000
 load S01_3.29.2024.mat
 fs = 1000;
+y_voltage_uV = double(y_voltage_uV); % from single to double point 
 
 % variables given are x_time_s and y_voltage_uV. Pretty self explanatory.
 % We are given six channels of voltage data. Let's split that (want 4).
@@ -36,8 +37,6 @@ for i = 1:channelNumber
         title(sprintf('EEG Channel No. %d, negligible.', i))
     end
 end
-
-sound(y, Fs, 16);
 
 %% A. Bandpass filter 1-30Hz, cutting everything else out.
 % We zero-phase bandpass in time by using filtfilt.
@@ -68,8 +67,6 @@ for i = 1:desiredNumber
     ylabel("Voltage, uV");
     title(sprintf('Filtered EEG Channel No. %d',i))
 end
-
-sound(y, Fs, 16);
 
 %% B. View the data in the time series, preferably the filtered series,
 % and determine where there are major changes, not just an aberrant spike,
@@ -127,8 +124,6 @@ for i = 1:desiredNumber
     title(sprintf('1-30Hz BP Filtered FFT of EEG Channel No. %d, 0-100Hz',i))
 end
 
-sound(y, Fs, 16);
-
 % Initialize PSD matrices
 filtPSD = zeros(desiredNumber,fs);
 unfiltPSD = zeros(desiredNumber,fs);
@@ -155,8 +150,6 @@ for i = 1:desiredNumber
     ylabel("Power, dB");
     title(sprintf('Log of Filtered PSD of EEG Channel No. %d, 0-100Hz',i))
 end
-
-sound(y, Fs, 16);
 
 %% Questions to ask:
     % 1. Should we multiply our plot amplitudes by 2? Reasoning: with the
@@ -200,7 +193,5 @@ for i = 1:desiredNumber
     ylabel("Power, dB");
     title(sprintf('Log of BP&BS Filt PSD of EEG Channel No. %d, 0-100Hz',i))
 end
-
-sound(y, Fs, 16);
 
 
